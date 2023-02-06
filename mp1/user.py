@@ -32,3 +32,6 @@ class User(object):
 
     def latlon_valid(self):
        return self.home_lat <= 90 and self.home_lat >= -90 and self.home_lon <= 180 and self.home_lon >= -180
+
+    def __str__(self):
+        return str(self.id) + " " + str(self.home_lat) + " " + str(self.home_lon) + " " + str(self.home_shared) + " " + str(self.friends)
