@@ -5,7 +5,24 @@ from utils import distance_km
 def cp2_1_simple_inference(dictUsers):
     dictUsersInferred = dict()  # dict to return, store inferred results here
     # you should keep everything in dictUsers as is / read-only
-    # TODO
+    for v in dictUsers.values():
+        if v.home_shared == False:
+            latSum = 0
+            lonSum = 0
+            frnShareLoc = 0
+            for f in v.friends:
+                frn = dictUsers[f]
+                if frn.home_shared == True:
+                    latSum += frn.home_lat
+                    lonSum += frn.home_lon
+                    frnShareLoc += 1
+            if frnShareLoc != 0:
+                user = User(v.id, latSum/frnShareLoc, lonSum/frnShareLoc, True)
+            else:
+                user = User(u_id = v.id, u_home_shared = False)
+            dictUsersInferred.update(((v.id, user),))
+        else:
+            dictUsersInferred.update(((v.id, v),))
     return dictUsersInferred
 
 
