@@ -20,7 +20,7 @@ def cp2_1_simple_inference(dictUsers):
             if frnShareLoc != 0:
                 user = User(v.id, latSum/frnShareLoc, lonSum/frnShareLoc, True)
             else:
-                user = User(u_id = v.id, u_home_shared = False)
+                user = User(u_id=v.id, u_home_shared=False)
             dictUsersInferred.update(((v.id, user),))
         else:
             dictUsersInferred.update(((v.id, v),))
@@ -32,22 +32,30 @@ def cp2_2_improved_inference(dictUsers):
     for v in dictUsers.values():
         if v.home_shared == False:
             frnShareLoc = 0
-            frnShareBound = 5
+            frnShareBound = 3
             frn_home_loc = []
             for f in v.friends:
                 frn = dictUsers[f]
                 if frn.home_shared == True:
                     frnShareLoc += 1
                     frn_home_loc.append([frn.home_lat, frn.home_lon])
+
             if frnShareLoc < frnShareBound:
                 for f in v.friends:
                     if frnShareLoc >= frnShareBound:
-                            break 
+                        break
                     for ff in dictUsers[f].friends:
                         ffrn = dictUsers[ff]
                         if ffrn.home_shared == True:
                             frnShareLoc += 1
-                            frn_home_loc.append([frn.home_lat, frn.home_lon])
+                            frn_home_loc.append([ffrn.home_lat, ffrn.home_lon])
+                        # else:
+                        #     if dictUsersInferred.__contains__(ff):
+                        #         ffrnInferred = dictUsersInferred[ff]
+                        #         if ffrnInferred.home_shared == True:
+                        #             frnShareLoc += 1
+                        #             frn_home_loc.append(
+                        #                 [ffrnInferred.home_lat, ffrnInferred.home_lon])
                         if frnShareLoc >= frnShareBound:
                             break
             # find the outlier
@@ -60,31 +68,33 @@ def cp2_2_improved_inference(dictUsers):
                 sdLat = sd[0]
                 sdLon = sd[1]
                 # float64 accuracy problem +- 10e-8
-                withoutOutlierList = [[x, y] for [x, y] in frn_home_loc if ((x > meanLat - sdLat - 10e-8 and x < meanLat + sdLat + 10e-8) and (y > meanLon - sdLon - 10e-8 and y < meanLon + sdLon + 10e-8))]
+                withoutOutlierList = [[x, y] for [x, y] in frn_home_loc if (
+                    (x > meanLat - 1*sdLat - 10e-8 and x < meanLat + 1*sdLat + 10e-8) and (y > meanLon - 1*sdLon - 10e-8 and y < meanLon + 1*sdLon + 10e-8))]
                 if len(withoutOutlierList) != 0:
                     latSum = 0
                     lonSum = 0
                     for [lat, lon] in withoutOutlierList:
                         latSum += lat
                         lonSum += lon
-                    user = User(v.id, latSum/len(withoutOutlierList), lonSum/len(withoutOutlierList), True)
+                    user = User(v.id, latSum/len(withoutOutlierList),
+                                lonSum/len(withoutOutlierList), True)
                     dictUsersInferred.update(((v.id, user),))
                 else:
                     user = User(v.id, meanLat, meanLon, True)
                     dictUsersInferred.update(((v.id, user),))
             else:
-                user = User(u_id = v.id, u_home_shared = False)
+                user = User(u_id=v.id, u_home_shared=False)
                 dictUsersInferred.update(((v.id, user),))
         else:
             dictUsersInferred.update(((v.id, v),))
-    return dictUsersInferred
 
+    return dictUsersInferred
 
 
 def cp2_calc_accuracy(truth_dict, inferred_dict):
     # distance_km(a,b): return distance between a and be in km
     # recommended standard: is accuate if distance to ground truth < 25km
-    if len(truth_dict) != len(inferred_dict) or len(truth_dict)==0:
+    if len(truth_dict) != len(inferred_dict) or len(truth_dict) == 0:
         return 0.0
     sum = 0
     for i in truth_dict:
