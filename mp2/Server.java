@@ -31,6 +31,19 @@ public class Server {
 			- Set encryptedPolyEval[j] = E_K(rj P(sj) + sj)
         */
  	// ------ Your code goes here. --------
+        int j = 0;
+        for(BigInteger sj : serverInputs){
+            BigInteger rj = randomBigInt(sj);
+            BigInteger Psj = BigInteger.ZERO;
+            for(int l = 0; l < encryptedPolyCoeffs.length; l++){
+                // compute sj^l
+                BigInteger sjl = sj.pow(l);
+                Psj = Psj.add(encryptedPolyCoeffs[l].modPow(sjl, new BigInteger("1")));
+            }
+            BigInteger E = paillier.Encryption((Psj.multiply(rj)).add(sj));
+            encryptedPolyEval[j ++] = E;
+        }
+
         
         StaticUtils.write(encryptedPolyEval, clientFilename+".out");
     }
