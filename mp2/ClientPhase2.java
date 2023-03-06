@@ -24,8 +24,15 @@ public class ClientPhase2 {
         BigInteger[] roots = inputs.getInputs();
         List<BigInteger> rootsList = Arrays.asList(roots);
 
+//        for(BigInteger r : rootsList){
+//            System.out.println(r);
+//        }
+
+//        System.out.println("==================");
+
         for(int i = 0; i < encryptedPolyEval.length; i++){
             BigInteger match = paillier.Decryption(encryptedPolyEval[i]);
+//            System.out.println(match);
             if(rootsList.contains(match)){
                 System.out.println(match + " is common.");
             }

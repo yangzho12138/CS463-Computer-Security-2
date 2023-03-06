@@ -34,13 +34,13 @@ public class Server {
         int j = 0;
         for(BigInteger sj : serverInputs){
             BigInteger rj = randomBigInt(sj);
-            BigInteger Psj = BigInteger.ZERO;
+            BigInteger EkPsj = BigInteger.ZERO;
             for(int l = 0; l < encryptedPolyCoeffs.length; l++){
                 // compute sj^l
                 BigInteger sjl = sj.pow(l);
-                Psj = Psj.add(encryptedPolyCoeffs[l].modPow(sjl, new BigInteger("1")));
+                EkPsj = EkPsj.add(encryptedPolyCoeffs[l].modPow(sjl, new BigInteger("1")));
             }
-            BigInteger E = paillier.Encryption((Psj.multiply(rj)).add(sj));
+            BigInteger E = (EkPsj.multiply(rj)).add(paillier.Encryption((sj)));
             encryptedPolyEval[j ++] = E;
         }
 
