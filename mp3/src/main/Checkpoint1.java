@@ -63,8 +63,20 @@ public class Checkpoint1 {
 	 * @return list of output addresses
 	 */
 	public List<String> getOutputAddresses() {
-		// TODO implement me
-		return null;
+		List<Transaction> transactions = block.getTransactions();
+		int outputsNum = 0;
+		List<String> target = new ArrayList<>();
+		for(Transaction t : transactions){
+			List<Output> outputs = t.getOutputs();
+			if (outputs.size() > outputsNum){
+				outputsNum = outputs.size();
+				target.clear();
+				for(Output o : outputs){
+					target.add(o.getAddress());
+				}
+			}
+		}
+		return target;
 	}
 
 	/**
@@ -77,8 +89,22 @@ public class Checkpoint1 {
 	 * @return list of input addresses
 	 */
 	public List<String> getInputAddresses() {
-		// TODO implement me
-		return null;
+		List<Transaction> transactions = block.getTransactions();
+		int inputsNum = 0;
+		List<String> target = new ArrayList<>();
+		for(Transaction t : transactions){
+			List<Input> inputs = t.getInputs();
+			if (inputs.size() > inputsNum){
+				inputsNum = inputs.size();
+				target.clear();
+				for(Input i : inputs){
+					if(i.getPreviousOutput() != null){ // generation transaction has no previous outputs
+						target.add(i.getPreviousOutput().getAddress());
+					}
+				}
+			}
+		}
+		return target;
 	}
 
 	/**
@@ -91,8 +117,19 @@ public class Checkpoint1 {
 	 * @return the bitcoin address that has received the largest amount of Satoshi
 	 */
 	public String getLargestRcv() {
-		// TODO implement me
-		return null;
+		List<Transaction> transactions = block.getTransactions();
+		long largestRcv = 0L;
+		String target = new String();
+		for(Transaction t : transactions){
+			List<Output> outputs = t.getOutputs();
+			for(Output o : outputs){
+				if(largestRcv < o.getValue()){
+					largestRcv = o.getValue();
+					target = o.getAddress();
+				}
+			}
+		}
+		return target;
 	}
 
 	/**
@@ -107,8 +144,17 @@ public class Checkpoint1 {
 	 * @return number of coin base transactions
 	 */
 	public int getCoinbaseCount() {
-		// TODO implement me
-		return 0;
+		List<Transaction> transactions = block.getTransactions();
+		int coinBaseNum = 0;
+		for(Transaction t : transactions){
+			List<Input> inputs = t.getInputs();
+			for(Input i : inputs){
+				if(i.getPreviousOutput().getValue() == 0){
+					coinBaseNum ++;
+				}
+			}
+		}
+		return coinBaseNum;
 	}
 
 	/**
@@ -117,8 +163,15 @@ public class Checkpoint1 {
 	 * @return number of Satoshi generated
 	 */
 	public long getSatoshiGen() {
-		// TODO implement me
-		return 0L;
+		List<Transaction> transactions = block.getTransactions();
+		long sum = 0L;
+		for(Transaction t : transactions){
+			List<Output> outputs = t.getOutputs();
+			for(Output o : outputs){
+				sum += o.getValue();
+			}
+		}
+		return sum;
 	}
 
 }
