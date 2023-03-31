@@ -166,6 +166,14 @@ public class Checkpoint1 {
 		List<Transaction> transactions = block.getTransactions();
 		long sum = 0L;
 		for(Transaction t : transactions){
+			List<Input> inputs = t.getInputs();
+			long inputSum = 0L;
+			for(Input input : inputs){
+				inputSum += input.getPreviousOutput().getValue();
+			}
+			if(inputSum != 0){
+				continue;
+			}
 			List<Output> outputs = t.getOutputs();
 			for(Output o : outputs){
 				sum += o.getValue();
