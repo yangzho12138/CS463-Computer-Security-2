@@ -7,7 +7,6 @@ from sklearn.svm import LinearSVC
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.feature_selection import SelectFromModel
-from sklearn.linear_model import LogisticRegression
 
 class SVMModel:
     """Base class for SVM-like classifiers."""
@@ -22,6 +21,8 @@ class SVMModel:
         self.column_idxs = [] # feature indexes after feature selection
         self.X_train, self.y_train, self.m_train = [], [], []
         self.X_test, self.y_test, self.m_test = [], [], []
+        self.feature_index_positive = None
+        self.feature_index_negative = None
 
     def generate(self, save=True):
         X_train, X_test, y_train, y_test, m_train, m_test, self.vec, train_test_random_state = load_features(
@@ -38,17 +39,26 @@ class SVMModel:
             self.save_to_file()
 
     def perform_feature_selection(self, X_train, y_train):
+        # After feature election, the model achieves better results
+        # 1. a model which uses too many features may lead to a overfitting problem
+        # 2. some features may not be benefit for the model prediction which could be seen as noise, and removing them can improve the model performance
+        
         ##############TODO: this can be the part implemented by the students#########
         # Perform L2-penalty feature selection
-        # TODO:  put your thought as code comments to compare the performance of with and without feature selection and why do you think one could achieve a little bit better results.
         cols = None
         if self._num_features is not None:
-            # C: 0.00000000001
-            sel = SelectFromModel(LogisticRegression(C=0.1, penalty='l2', solver='saga'), max_features=self._num_features)
+            # TODO how to determine the C value?
+            sel = SelectFromModel(LinearSVC(C=0.1, penalty='l2'), max_features=self._num_features)
             sel.fit(X_train, y_train)
             cols = sel.get_support(indices=True)
+            # get the feature weights
+            feature_weights = sel.estimator_.coef_
+            selected_feature_weights = feature_weights[:, cols]
+            self.feature_index_positive = selected_feature_weights.argsort()[0][-300:][::-1]
+            self.feature_index_negative = selected_feature_weights.argsort()[0][:300]
         else:
             cols = np.arange(X_train.shape[1])
+
         return cols
 
     def save_to_file(self):
