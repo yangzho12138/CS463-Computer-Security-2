@@ -70,7 +70,7 @@ class SVMModel:
 class SVM(SVMModel):
     """Standard linear SVM using scikit-learn implementation."""
 
-    def __init__(self, X_filename, y_filename, meta_filename, save_folder='./mp4_SVM_models', num_features=None, svm_c=1, max_iter=1000):
+    def __init__(self, X_filename, y_filename, meta_filename, save_folder='./mp4_SVM_models', num_features=None, svm_c=1, max_iter=10000):
         super().__init__(X_filename, y_filename, meta_filename, num_features, save_folder)
         self.model_name = self.generate_model_name()
         self.svm_c = svm_c
