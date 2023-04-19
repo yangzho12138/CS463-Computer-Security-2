@@ -13,19 +13,19 @@ def check_leet(pw1,pw2):
     
     for i in range(len(pw1)):
         if pw1[i] != pw2[i]:
+            flag = False
             for j in range(len(leet_list)):
                 leet_pair = list(leet_list[j])
                 if pw1[i] == leet_pair[0]:
-                    if pw2[i] != leet_pair[1]:
-                        return False
-                    else:
+                    if pw2[i] == leet_pair[1]:
+                        flag = True
                         break
                 elif pw1[i] == leet_pair[1]:
-                    if pw2[i] != leet_pair[0]:
-                        return False
-                    else:
+                    if pw2[i] == leet_pair[0]:
+                        flag = True
                         break
-
+            if flag == False:
+                return False
                 
     return True
 
