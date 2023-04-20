@@ -45,8 +45,38 @@ def apply_capt_transformation(ori_pw, transformation):
     #output (list of string): list of passwords that after transformation (all possiblities)
     #ori_pw = "abcde", transformation = "head\t2", output = [ABcde, AbCde, AbcDe]
     
-    # ***********************************************************************
-    # ****************************** TODO ***********************************
-    # ***********************************************************************
+    output = []
 
-    return []
+    potentail_pw = ''
+    count = int(transformation.split('\t')[-1])
+
+    if transformation.find('head') != -1:
+        count -= 1
+        if ori_pw[0].islower():
+            potentail_pw = ori_pw[0].upper() + ori_pw[1:]
+        else:
+            potentail_pw = ori_pw[0].lower() + ori_pw[1:]
+    
+    if transformation.find('tail') != -1:
+        count -= 1
+        if ori_pw[-1].islower():
+            potentail_pw = ori_pw[:-1] + ori_pw[-1].upper()
+        else:
+            potentail_pw = ori_pw[:-1] + ori_pw[-1].lower()
+    
+    dfs_change(potentail_pw, count, output, 1)
+
+    return output
+
+def dfs_change(pw, count, output, pos):
+    if count == 0:
+        output.append(pw)
+        return
+    
+    for i in range(pos, len(pw) - 1):
+        if len(pw) - i < count:
+            break
+        if pw[i].islower():
+            dfs_change(pw[:i] + pw[i].upper() + pw[i+1:], count - 1, output, i + 1)
+        else:
+            dfs_change(pw[:i] + pw[i].lower() + pw[i+1:], count - 1, output, i + 1)

@@ -61,8 +61,37 @@ def apply_leet_transformation(ori_pw, transformation):
     #forward transformation: each term in transformation, can be and only be applied once on the ori_pw in forward direction (3->e,a->@)
     #backward: (e->3,@->a)
     
-    # ***********************************************************************
-    # ****************************** TODO ***********************************
-    # ***********************************************************************
+    output = []
+    leet_pairs = transformation.split('\t')
+
+    dfs_leet(ori_pw, output, 0, leet_pairs)
     
-    return []
+    return output
+
+def dfs_leet(pw, output, pos, leet_pairs):
+    if pos == len(leet_pairs):
+        output.append(pw)
+        return
+
+    a = leet_pairs[pos][0]
+    b = leet_pairs[pos][1]
+
+    # a -> b
+    posA = []
+    p = pw.find(a)
+    while p != -1:
+        posA.append(p)
+        p = pw.find(a, p + 1)
+    
+    for i in range(len(posA)):
+        dfs_leet(pw[:posA[i]] + b + pw[posA[i] + 1:], output, pos + 1, leet_pairs)
+
+    # b -> a
+    posB = []
+    p = pw.find(b)
+    while p != -1:
+        posB.append(p)
+        p = pw.find(b, p + 1)
+    
+    for i in range(len(posB)):
+        dfs_leet(pw[:posB[i]] + a + pw[posB[i] + 1:], output, pos + 1, leet_pairs)

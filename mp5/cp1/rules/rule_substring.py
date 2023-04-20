@@ -31,11 +31,12 @@ def guess_target_as_substring(ori_pw):
     #e.g. pw1=abc123, output = [a,ab,abc,abc1,abc12,3,23,123,c123,bc123]
     #in transformation dictionary, the transformation = 'special_trans_as_substring'
 
-    # ***********************************************************************
-    # ****************************** TODO ***********************************
-    # ***********************************************************************
+    output = []
+    for i in range(len(ori_pw) - 1):
+        output.append(ori_pw[:i+1])
+        output.append(ori_pw[i+1:])
 
-    return []
+    return output
 
 def apply_substring_transformation(ori_pw, transformation):
     #ori_pw (string): input password that needs to be transformed
@@ -43,8 +44,14 @@ def apply_substring_transformation(ori_pw, transformation):
     #output (list of string): list of passwords that after transformation
     #add head string to head, add tail string to tail
     
-    # ***********************************************************************
-    # ****************************** TODO ***********************************
-    # ***********************************************************************
+    output = []
+    if transformation == 'special_trans_as_substring':
+        output = guess_target_as_substring(ori_pw)
+    else:
+        headPos = transformation.find('head\t')
+        tailPos = transformation.find('\ttail\t')
+        head = transformation[headPos+5:tailPos]
+        tail = transformation[tailPos+6:]
+        output.append(head + ori_pw + tail)
 
-    return []
+    return output
