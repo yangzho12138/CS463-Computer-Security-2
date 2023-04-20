@@ -35,11 +35,22 @@ def check_leet_transformation(pw1, pw2):
     #example: pw1=abcd3 pw2 = @bcde, transformation = 3e\ta@ because pw1->pw2:3->e and a->@ and '3e'<'a@' for the order
     #for simplicity, duplicate item is allowed. example: pw1=abcda pw2 = @bcd@, transformation = a@\ta@ 
     
-    # ***********************************************************************
-    # ****************************** TODO ***********************************
-    # ***********************************************************************
+    output = ''
+    leet_pairs = []
 
-    return ''
+    for i in range(len(pw1)):
+        if pw1[i] != pw2[i]:
+            leet_pairs.append(str(pw1[i] + pw2[i]))
+    
+    leet_pairs = sorted(leet_pairs)
+
+    for i in range(len(leet_pairs)):
+        if i == len(leet_pairs) - 1:
+            output += leet_pairs[i]
+        else:
+            output += leet_pairs[i] + '\t'
+
+    return output
 
 
 def apply_leet_transformation(ori_pw, transformation):

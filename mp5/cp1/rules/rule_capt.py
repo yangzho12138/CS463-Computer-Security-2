@@ -24,11 +24,20 @@ def check_capt_transformation(pw1, pw2):
     #example pw1 = abcdE, pw2 = AbcDe, transformation = head\ttail\t3 (head char and tail chars are capt transformed, in total 3 chars are capt transformed)
     #example pw1 = abcde, pw2 = abcDe, transformation = 1 (in total 1 chars are capt transformed)
 
-    # ***********************************************************************
-    # ****************************** TODO ***********************************
-    # ***********************************************************************
+    output = ''
+    if pw1[0] != pw2[0]:
+        output += 'head\t'
+    if pw1[-1] != pw2[-1]:
+        output += 'tail\t'
+    
+    count = 0
+    for i in range(len(pw1)):
+        if pw1[i] != pw2[i]:
+            count += 1
+    
+    output += str(count)
 
-    return ''
+    return output
 
 def apply_capt_transformation(ori_pw, transformation):
     #ori_pw (string): input password that needs to be transformed

@@ -14,11 +14,15 @@ def check_substring_transformation(pw1, pw2):
     #example: pw1=123hello!!, pw2=hello, output=head\t123\ttail\t!!
     #example: pw1=hello!!, pw2=hello, output=head\t\ttail\t!!
 
-    # ***********************************************************************
-    # ****************************** TODO ***********************************
-    # ***********************************************************************
+    output = ''
+    if pw1 in pw2:
+        pos = pw2.find(pw1)
+        output = 'head\t' + pw2[:pos] + '\ttail\t' + pw2[pos+len(pw1):]
+    elif pw2 in pw1:
+        pos = pw1.find(pw2)
+        output = 'head\t' + pw1[:pos] + '\ttail\t' + pw1[pos+len(pw2):]
 
-    return ''
+    return output
 
 def guess_target_as_substring(ori_pw):
     #the first transformation applied in rule_substring
