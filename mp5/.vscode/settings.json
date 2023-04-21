@@ -1,0 +1,7 @@
+{
+  "python.analysis.extraPaths": [
+    "/Users/yang/opt/anaconda3/lib/python3.9/site-packages",
+    "./cp1/rules",
+    "./cp1"
+  ]
+}
